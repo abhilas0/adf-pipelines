@@ -11,6 +11,9 @@
 		"AzureSqlDatabase1_password": {
 			"value": ""
 		},
+		"LS_SQL_DB_Dynamic_password": {
+			"value": ""
+		},
 		"ADLS_LS_properties_typeProperties_url": {
 			"value": "https://missionadebathch8adls23.dfs.core.windows.net/"
 		},
@@ -22,6 +25,21 @@
 		},
 		"AzureSqlDatabase1_properties_typeProperties_userName": {
 			"value": "Abhilash"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
+			"value": "databaseserveradf.database.windows.net"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
+			"value": "azuresqldbfortesting"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
+			"value": "@{linkedService().userName}"
+		},
+		"LS_Rest_Api_properties_typeProperties_url": {
+			"value": "https://restcountries.com/v3.1/all"
+		},
+		"LS_Rest_Generic_properties_typeProperties_url": {
+			"value": "https://restcountries.com/v3.1/name"
 		},
 		"containerUri": {
 			"value": ""

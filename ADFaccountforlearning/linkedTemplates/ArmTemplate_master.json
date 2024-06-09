@@ -15,6 +15,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
 		},
+		"LS_SQL_DB_Dynamic_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_SQL_DB_Dynamic'"
+		},
 		"ADLS_LS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://missionadebathch8adls23.dfs.core.windows.net/"
@@ -30,6 +34,26 @@
 		"AzureSqlDatabase1_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "Abhilash"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "databaseserveradf.database.windows.net"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "azuresqldbfortesting"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "@{linkedService().userName}"
+		},
+		"LS_Rest_Api_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://restcountries.com/v3.1/all"
+		},
+		"LS_Rest_Generic_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://restcountries.com/v3.1/name"
 		},
 		"containerUri": {
 			"type": "string",
@@ -64,6 +88,9 @@
 					"AzureSqlDatabase1_password": {
 						"value": "[parameters('AzureSqlDatabase1_password')]"
 					},
+					"LS_SQL_DB_Dynamic_password": {
+						"value": "[parameters('LS_SQL_DB_Dynamic_password')]"
+					},
 					"ADLS_LS_properties_typeProperties_url": {
 						"value": "[parameters('ADLS_LS_properties_typeProperties_url')]"
 					},
@@ -75,6 +102,21 @@
 					},
 					"AzureSqlDatabase1_properties_typeProperties_userName": {
 						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]"
+					},
+					"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
+						"value": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_server')]"
+					},
+					"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
+						"value": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_database')]"
+					},
+					"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
+						"value": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_userName')]"
+					},
+					"LS_Rest_Api_properties_typeProperties_url": {
+						"value": "[parameters('LS_Rest_Api_properties_typeProperties_url')]"
+					},
+					"LS_Rest_Generic_properties_typeProperties_url": {
+						"value": "[parameters('LS_Rest_Generic_properties_typeProperties_url')]"
 					}
 				}
 			},
