@@ -13,6 +13,91 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_JSON_customer')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_LS",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folderName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().folderName",
+							"type": "Expression"
+						},
+						"fileSystem": "landing"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"ProductID": {
+							"type": "integer"
+						},
+						"Name": {
+							"type": "string"
+						},
+						"ProductNumber": {
+							"type": "string"
+						},
+						"Color": {
+							"type": "string"
+						},
+						"StandardCost": {
+							"type": "number"
+						},
+						"ListPrice": {
+							"type": "number"
+						},
+						"Size": {
+							"type": "string"
+						},
+						"Weight": {
+							"type": "number"
+						},
+						"ProductCategoryID": {
+							"type": "integer"
+						},
+						"ProductModelID": {
+							"type": "integer"
+						},
+						"SellStartDate": {
+							"type": "string"
+						},
+						"SellEndDate": {
+							"type": "string"
+						},
+						"DiscontinuedDate": {
+							"type": "null"
+						},
+						"ThumbNailPhoto": {
+							"type": "string"
+						},
+						"ThumbnailPhotoFileName": {
+							"type": "string"
+						},
+						"rowguid": {
+							"type": "string"
+						},
+						"ModifiedDate": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_Child_Pipeline_NestedIf')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1751,6 +1836,68 @@
 				"annotations": []
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Copy_Customer_To_JSON')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_CustomerTable_To_JSON",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_SQL_DB_Customer",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_JSON_customer",
+								"type": "DatasetReference",
+								"parameters": {
+									"folderName": "JSON"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_JSON_customer')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/PL_NestedIf')]",
