@@ -35,6 +35,14 @@
 			"type": "string",
 			"defaultValue": "Abhilash"
 		},
+		"LS_Rest_Api_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://restcountries.com/v3.1/all"
+		},
+		"LS_Rest_Generic_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://restcountries.com/v3.1/name"
+		},
 		"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
 			"type": "string",
 			"defaultValue": "databaseserveradf.database.windows.net"
@@ -46,14 +54,6 @@
 		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "@{linkedService().userName}"
-		},
-		"LS_Rest_Api_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://restcountries.com/v3.1/all"
-		},
-		"LS_Rest_Generic_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://restcountries.com/v3.1/name"
 		},
 		"containerUri": {
 			"type": "string",
@@ -103,6 +103,12 @@
 					"AzureSqlDatabase1_properties_typeProperties_userName": {
 						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]"
 					},
+					"LS_Rest_Api_properties_typeProperties_url": {
+						"value": "[parameters('LS_Rest_Api_properties_typeProperties_url')]"
+					},
+					"LS_Rest_Generic_properties_typeProperties_url": {
+						"value": "[parameters('LS_Rest_Generic_properties_typeProperties_url')]"
+					},
 					"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
 						"value": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_server')]"
 					},
@@ -111,12 +117,6 @@
 					},
 					"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
 						"value": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_userName')]"
-					},
-					"LS_Rest_Api_properties_typeProperties_url": {
-						"value": "[parameters('LS_Rest_Api_properties_typeProperties_url')]"
-					},
-					"LS_Rest_Generic_properties_typeProperties_url": {
-						"value": "[parameters('LS_Rest_Generic_properties_typeProperties_url')]"
 					}
 				}
 			},

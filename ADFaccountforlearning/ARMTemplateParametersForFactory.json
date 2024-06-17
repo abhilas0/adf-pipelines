@@ -26,6 +26,12 @@
 		"AzureSqlDatabase1_properties_typeProperties_userName": {
 			"value": "Abhilash"
 		},
+		"LS_Rest_Api_properties_typeProperties_url": {
+			"value": "https://restcountries.com/v3.1/all"
+		},
+		"LS_Rest_Generic_properties_typeProperties_url": {
+			"value": "https://restcountries.com/v3.1/name"
+		},
 		"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
 			"value": "databaseserveradf.database.windows.net"
 		},
@@ -34,12 +40,6 @@
 		},
 		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
 			"value": "@{linkedService().userName}"
-		},
-		"LS_Rest_Api_properties_typeProperties_url": {
-			"value": "https://restcountries.com/v3.1/all"
-		},
-		"LS_Rest_Generic_properties_typeProperties_url": {
-			"value": "https://restcountries.com/v3.1/name"
 		}
 	}
 }
