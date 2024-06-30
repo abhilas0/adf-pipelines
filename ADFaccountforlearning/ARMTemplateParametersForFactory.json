@@ -14,6 +14,9 @@
 		"LS_SQL_DB_Dynamic_password": {
 			"value": ""
 		},
+		"LS_SFTP_password": {
+			"value": ""
+		},
 		"ADLS_LS_properties_typeProperties_url": {
 			"value": "https://missionadebathch8adls23.dfs.core.windows.net/"
 		},
@@ -40,6 +43,15 @@
 		},
 		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
 			"value": "@{linkedService().userName}"
+		},
+		"LS_Rest_Pagination_properties_typeProperties_url": {
+			"value": "https://dummyjson.com/products/{page_no}"
+		},
+		"LS_SFTP_properties_typeProperties_host": {
+			"value": "test.rebex.net"
+		},
+		"LS_SFTP_properties_typeProperties_userName": {
+			"value": "demo"
 		}
 	}
 }

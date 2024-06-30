@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_SQL_DB_Dynamic'"
 		},
+		"LS_SFTP_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_SFTP'"
+		},
 		"ADLS_LS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://missionadebathch8adls23.dfs.core.windows.net/"
@@ -54,6 +58,18 @@
 		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "@{linkedService().userName}"
+		},
+		"LS_Rest_Pagination_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dummyjson.com/products/{page_no}"
+		},
+		"LS_SFTP_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "test.rebex.net"
+		},
+		"LS_SFTP_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "demo"
 		},
 		"containerUri": {
 			"type": "string",
@@ -91,6 +107,9 @@
 					"LS_SQL_DB_Dynamic_password": {
 						"value": "[parameters('LS_SQL_DB_Dynamic_password')]"
 					},
+					"LS_SFTP_password": {
+						"value": "[parameters('LS_SFTP_password')]"
+					},
 					"ADLS_LS_properties_typeProperties_url": {
 						"value": "[parameters('ADLS_LS_properties_typeProperties_url')]"
 					},
@@ -117,6 +136,15 @@
 					},
 					"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
 						"value": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_userName')]"
+					},
+					"LS_Rest_Pagination_properties_typeProperties_url": {
+						"value": "[parameters('LS_Rest_Pagination_properties_typeProperties_url')]"
+					},
+					"LS_SFTP_properties_typeProperties_host": {
+						"value": "[parameters('LS_SFTP_properties_typeProperties_host')]"
+					},
+					"LS_SFTP_properties_typeProperties_userName": {
+						"value": "[parameters('LS_SFTP_properties_typeProperties_userName')]"
 					}
 				}
 			},
