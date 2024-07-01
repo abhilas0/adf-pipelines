@@ -11,10 +11,10 @@
 		"AzureSqlDatabase1_password": {
 			"value": ""
 		},
-		"LS_SQL_DB_Dynamic_password": {
+		"LS_SFTP_password": {
 			"value": ""
 		},
-		"LS_SFTP_password": {
+		"LS_SQL_DB_Dynamic_password": {
 			"value": ""
 		},
 		"ADLS_LS_properties_typeProperties_url": {
@@ -35,15 +35,6 @@
 		"LS_Rest_Generic_properties_typeProperties_url": {
 			"value": "https://restcountries.com/v3.1/name"
 		},
-		"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
-			"value": "databaseserveradf.database.windows.net"
-		},
-		"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
-			"value": "azuresqldbfortesting"
-		},
-		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
-			"value": "@{linkedService().userName}"
-		},
 		"LS_Rest_Pagination_properties_typeProperties_url": {
 			"value": "https://dummyjson.com/products/{page_no}"
 		},
@@ -52,6 +43,15 @@
 		},
 		"LS_SFTP_properties_typeProperties_userName": {
 			"value": "demo"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
+			"value": "databaseserveradf.database.windows.net"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
+			"value": "azuresqldbfortesting"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
+			"value": "@{linkedService().userName}"
 		}
 	}
 }

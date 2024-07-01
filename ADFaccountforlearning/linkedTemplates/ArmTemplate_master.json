@@ -15,13 +15,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
 		},
-		"LS_SQL_DB_Dynamic_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'LS_SQL_DB_Dynamic'"
-		},
 		"LS_SFTP_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_SFTP'"
+		},
+		"LS_SQL_DB_Dynamic_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_SQL_DB_Dynamic'"
 		},
 		"ADLS_LS_properties_typeProperties_url": {
 			"type": "string",
@@ -47,18 +47,6 @@
 			"type": "string",
 			"defaultValue": "https://restcountries.com/v3.1/name"
 		},
-		"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "databaseserveradf.database.windows.net"
-		},
-		"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "azuresqldbfortesting"
-		},
-		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "@{linkedService().userName}"
-		},
 		"LS_Rest_Pagination_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dummyjson.com/products/{page_no}"
@@ -70,6 +58,18 @@
 		"LS_SFTP_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "demo"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "databaseserveradf.database.windows.net"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "azuresqldbfortesting"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "@{linkedService().userName}"
 		},
 		"containerUri": {
 			"type": "string",
@@ -104,11 +104,11 @@
 					"AzureSqlDatabase1_password": {
 						"value": "[parameters('AzureSqlDatabase1_password')]"
 					},
-					"LS_SQL_DB_Dynamic_password": {
-						"value": "[parameters('LS_SQL_DB_Dynamic_password')]"
-					},
 					"LS_SFTP_password": {
 						"value": "[parameters('LS_SFTP_password')]"
+					},
+					"LS_SQL_DB_Dynamic_password": {
+						"value": "[parameters('LS_SQL_DB_Dynamic_password')]"
 					},
 					"ADLS_LS_properties_typeProperties_url": {
 						"value": "[parameters('ADLS_LS_properties_typeProperties_url')]"
@@ -128,15 +128,6 @@
 					"LS_Rest_Generic_properties_typeProperties_url": {
 						"value": "[parameters('LS_Rest_Generic_properties_typeProperties_url')]"
 					},
-					"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
-						"value": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_server')]"
-					},
-					"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
-						"value": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_database')]"
-					},
-					"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
-						"value": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_userName')]"
-					},
 					"LS_Rest_Pagination_properties_typeProperties_url": {
 						"value": "[parameters('LS_Rest_Pagination_properties_typeProperties_url')]"
 					},
@@ -145,6 +136,15 @@
 					},
 					"LS_SFTP_properties_typeProperties_userName": {
 						"value": "[parameters('LS_SFTP_properties_typeProperties_userName')]"
+					},
+					"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
+						"value": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_server')]"
+					},
+					"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
+						"value": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_database')]"
+					},
+					"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
+						"value": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_userName')]"
 					}
 				}
 			},

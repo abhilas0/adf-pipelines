@@ -15,13 +15,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
 		},
-		"LS_SQL_DB_Dynamic_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'LS_SQL_DB_Dynamic'"
-		},
 		"LS_SFTP_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_SFTP'"
+		},
+		"LS_SQL_DB_Dynamic_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_SQL_DB_Dynamic'"
 		},
 		"ADLS_LS_properties_typeProperties_url": {
 			"type": "string",
@@ -47,18 +47,6 @@
 			"type": "string",
 			"defaultValue": "https://restcountries.com/v3.1/name"
 		},
-		"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "databaseserveradf.database.windows.net"
-		},
-		"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "azuresqldbfortesting"
-		},
-		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "@{linkedService().userName}"
-		},
 		"LS_Rest_Pagination_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dummyjson.com/products/{page_no}"
@@ -70,6 +58,18 @@
 		"LS_SFTP_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "demo"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "databaseserveradf.database.windows.net"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "azuresqldbfortesting"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "@{linkedService().userName}"
 		}
 	},
 	"variables": {
@@ -146,33 +146,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/LS_SQL_DB_Dynamic')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"parameters": {
-					"userName": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "AzureSqlDatabase",
-				"typeProperties": {
-					"server": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_server')]",
-					"database": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_database')]",
-					"encrypt": "mandatory",
-					"trustServerCertificate": false,
-					"authenticationType": "SQL",
-					"userName": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('LS_SQL_DB_Dynamic_password')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/LS_Rest_Pagination')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -203,6 +176,33 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('LS_SFTP_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_SQL_DB_Dynamic')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"parameters": {
+					"userName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_server')]",
+					"database": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('LS_SQL_DB_Dynamic_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('LS_SQL_DB_Dynamic_password')]"
 					}
 				}
 			},
@@ -589,6 +589,104 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_Product_CSV_File')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "saleslt.Product.txt",
+						"folderPath": "Product",
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "ProductID",
+						"type": "String"
+					},
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "ProductNumber",
+						"type": "String"
+					},
+					{
+						"name": "Color",
+						"type": "String"
+					},
+					{
+						"name": "StandardCost",
+						"type": "String"
+					},
+					{
+						"name": "ListPrice",
+						"type": "String"
+					},
+					{
+						"name": "Size",
+						"type": "String"
+					},
+					{
+						"name": "Weight",
+						"type": "String"
+					},
+					{
+						"name": "ProductCategoryID",
+						"type": "String"
+					},
+					{
+						"name": "ProductModelID",
+						"type": "String"
+					},
+					{
+						"name": "SellStartDate",
+						"type": "String"
+					},
+					{
+						"name": "SellEndDate",
+						"type": "String"
+					},
+					{
+						"name": "DiscontinuedDate",
+						"type": "String"
+					},
+					{
+						"name": "ThumbNailPhoto",
+						"type": "String"
+					},
+					{
+						"name": "ThumbnailPhotoFileName",
+						"type": "String"
+					},
+					{
+						"name": "rowguid",
+						"type": "String"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_Product_SQL')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -812,24 +910,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_Rest_Api')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_Rest_Api",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "RestResource",
-				"typeProperties": {},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_Rest_Api')]"
 			]
 		}
 	]

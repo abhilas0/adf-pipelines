@@ -15,13 +15,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'AzureSqlDatabase1'"
 		},
-		"LS_SQL_DB_Dynamic_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'LS_SQL_DB_Dynamic'"
-		},
 		"LS_SFTP_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_SFTP'"
+		},
+		"LS_SQL_DB_Dynamic_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'LS_SQL_DB_Dynamic'"
 		},
 		"ADLS_LS_properties_typeProperties_url": {
 			"type": "string",
@@ -47,18 +47,6 @@
 			"type": "string",
 			"defaultValue": "https://restcountries.com/v3.1/name"
 		},
-		"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "databaseserveradf.database.windows.net"
-		},
-		"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "azuresqldbfortesting"
-		},
-		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "@{linkedService().userName}"
-		},
 		"LS_Rest_Pagination_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dummyjson.com/products/{page_no}"
@@ -70,6 +58,18 @@
 		"LS_SFTP_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "demo"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "databaseserveradf.database.windows.net"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "azuresqldbfortesting"
+		},
+		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "@{linkedService().userName}"
 		}
 	},
 	"variables": {
@@ -3488,6 +3488,75 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/PL_Rest_API_Pagination')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACT_copy_product",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET",
+								"paginationRules": {
+									"QueryParameters.{page_no}": "RANGE:1:100:1"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_Rest_Pagination",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_ADLS_CSV_generic",
+								"type": "DatasetReference",
+								"parameters": {
+									"folderName": "Pagination"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_Rest_Pagination')]",
+				"[concat(variables('factoryId'), '/datasets/DS_ADLS_CSV_generic')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/PL_Rest_Api')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -3617,6 +3686,70 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_Rest_Api_generic')]",
 				"[concat(variables('factoryId'), '/datasets/DS_ADLS_json')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_SFTP_Server')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACT_Copy_SFTP",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "SftpReadSettings",
+									"recursive": true,
+									"disableChunking": false
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_SFTP_Server",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_SFTP_Binary",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_SFTP_Server')]",
+				"[concat(variables('factoryId'), '/datasets/DS_SFTP_Binary')]"
 			]
 		},
 		{
@@ -4142,6 +4275,104 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_Product_CSV_File')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "saleslt.Product.txt",
+						"folderPath": "Product",
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "ProductID",
+						"type": "String"
+					},
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "ProductNumber",
+						"type": "String"
+					},
+					{
+						"name": "Color",
+						"type": "String"
+					},
+					{
+						"name": "StandardCost",
+						"type": "String"
+					},
+					{
+						"name": "ListPrice",
+						"type": "String"
+					},
+					{
+						"name": "Size",
+						"type": "String"
+					},
+					{
+						"name": "Weight",
+						"type": "String"
+					},
+					{
+						"name": "ProductCategoryID",
+						"type": "String"
+					},
+					{
+						"name": "ProductModelID",
+						"type": "String"
+					},
+					{
+						"name": "SellStartDate",
+						"type": "String"
+					},
+					{
+						"name": "SellEndDate",
+						"type": "String"
+					},
+					{
+						"name": "DiscontinuedDate",
+						"type": "String"
+					},
+					{
+						"name": "ThumbNailPhoto",
+						"type": "String"
+					},
+					{
+						"name": "ThumbnailPhotoFileName",
+						"type": "String"
+					},
+					{
+						"name": "rowguid",
+						"type": "String"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_Product_SQL')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -4489,6 +4720,69 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Rest_Pagination')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_Rest_Pagination",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_Rest_Pagination')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SFTP_Binary')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "landing"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_SFTP_Server')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_SFTP",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "SftpLocation",
+						"fileName": "KeyGenerator.png",
+						"folderPath": "/pub/example"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_SFTP')]"
 			]
 		},
 		{
@@ -4862,6 +5156,42 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/LS_Rest_Pagination')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('LS_Rest_Pagination_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_SFTP')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "Sftp",
+				"typeProperties": {
+					"host": "[parameters('LS_SFTP_properties_typeProperties_host')]",
+					"port": 22,
+					"skipHostKeyValidation": true,
+					"authenticationType": "Basic",
+					"userName": "[parameters('LS_SFTP_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('LS_SFTP_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/LS_SQL_DB_Dynamic')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -4889,217 +5219,118 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/PL_Rest_API_Pagination')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
+			"name": "[concat(parameters('factoryName'), '/DF_Copy_Product_to_DB')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
-				"activities": [
-					{
-						"name": "ACT_copy_product",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "RestSource",
-								"httpRequestTimeout": "00:01:40",
-								"requestInterval": "00.00:00:00.010",
-								"requestMethod": "GET",
-								"paginationRules": {
-									"QueryParameters.{page_no}": "RANGE:1:100:1"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "DS_Rest_Pagination",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DS_ADLS_CSV_generic",
-								"type": "DatasetReference",
-								"parameters": {
-									"folderName": "Pagination"
-								}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_Rest_Pagination')]",
-				"[concat(variables('factoryId'), '/datasets/DS_ADLS_CSV_generic')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_Rest_Pagination')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "RestService",
+				"type": "MappingDataFlow",
 				"typeProperties": {
-					"url": "[parameters('LS_Rest_Pagination_properties_typeProperties_url')]",
-					"enableServerCertificateValidation": true,
-					"authenticationType": "Anonymous"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_Rest_Pagination')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_Rest_Pagination",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "RestResource",
-				"typeProperties": {},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_Rest_Pagination')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/PL_SFTP_Server')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "ACT_Copy_SFTP",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "BinarySource",
-								"storeSettings": {
-									"type": "SftpReadSettings",
-									"recursive": true,
-									"disableChunking": false
-								},
-								"formatSettings": {
-									"type": "BinaryReadSettings"
-								}
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DS_Product_CSV_File",
+								"type": "DatasetReference"
 							},
-							"sink": {
-								"type": "BinarySink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								}
+							"name": "inputProductFile"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DS_Dataflow_CSV",
+								"type": "DatasetReference"
 							},
-							"enableStaging": false
+							"name": "Sinktoadf",
+							"rejectedDataLinkedService": {
+								"referenceName": "ADLS_LS",
+								"type": "LinkedServiceReference"
+							}
+						}
+					],
+					"transformations": [
+						{
+							"name": "filterproduct",
+							"description": "Filter Product ID greater than 800"
 						},
-						"inputs": [
-							{
-								"referenceName": "DS_SFTP_Server",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DS_SFTP_Binary",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_SFTP_Server')]",
-				"[concat(variables('factoryId'), '/datasets/DS_SFTP_Binary')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/LS_SFTP')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "Sftp",
-				"typeProperties": {
-					"host": "[parameters('LS_SFTP_properties_typeProperties_host')]",
-					"port": 22,
-					"skipHostKeyValidation": true,
-					"authenticationType": "Basic",
-					"userName": "[parameters('LS_SFTP_properties_typeProperties_userName')]",
-					"password": {
-						"type": "SecureString",
-						"value": "[parameters('LS_SFTP_password')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_SFTP_Server')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_SFTP",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "Binary",
-				"typeProperties": {
-					"location": {
-						"type": "SftpLocation",
-						"fileName": "KeyGenerator.png",
-						"folderPath": "/pub/example"
-					}
+						{
+							"name": "addcolorflag",
+							"description": "adding color flag derived column"
+						},
+						{
+							"name": "Selectrequiredcolumns"
+						},
+						{
+							"name": "findmaximum"
+						},
+						{
+							"name": "RemoveNull"
+						},
+						{
+							"name": "SortPrice"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ProductID as short,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as double,",
+						"          ListPrice as double,",
+						"          Size as string,",
+						"          Weight as double,",
+						"          ProductCategoryID as short,",
+						"          ProductModelID as short,",
+						"          SellStartDate as string,",
+						"          SellEndDate as string,",
+						"          DiscontinuedDate as string,",
+						"          ThumbNailPhoto as string,",
+						"          ThumbnailPhotoFileName as string,",
+						"          rowguid as string,",
+						"          ModifiedDate as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> inputProductFile",
+						"inputProductFile filter(ProductID > 800) ~> filterproduct",
+						"filterproduct derive(isColorFlag = equalsIgnoreCase(Color,'Black')) ~> addcolorflag",
+						"addcolorflag select(mapColumn(",
+						"          ProdID = ProductID,",
+						"          Name,",
+						"          ProductNumber,",
+						"          Color,",
+						"          StandardCost,",
+						"          ListPrice,",
+						"          Size,",
+						"          Weight,",
+						"          ModifiedDate,",
+						"          isColorFlag",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> Selectrequiredcolumns",
+						"Selectrequiredcolumns aggregate(groupBy(Color),",
+						"     HighestPrice = max(ListPrice),",
+						"          ProductCount = count(ProdID)) ~> findmaximum",
+						"findmaximum filter(!isNull(Color)) ~> RemoveNull",
+						"RemoveNull sort(desc(HighestPrice, true)) ~> SortPrice",
+						"SortPrice sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> Sinktoadf"
+					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_SFTP')]"
+				"[concat(variables('factoryId'), '/datasets/DS_Product_CSV_File')]",
+				"[concat(variables('factoryId'), '/datasets/DS_Dataflow_CSV')]",
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_SFTP_Binary')]",
+			"name": "[concat(parameters('factoryName'), '/DS_Dataflow_CSV')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -5108,16 +5339,68 @@
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "Binary",
+				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"folderPath": "Product/2024",
 						"fileSystem": "landing"
-					}
-				}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_Dataflow_Eexcution')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ACT_DF_Copy_Data",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_Copy_Product_to_DB",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"inputProductFile": {},
+									"Sinktoadf": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_Copy_Product_to_DB')]"
 			]
 		}
 	]
