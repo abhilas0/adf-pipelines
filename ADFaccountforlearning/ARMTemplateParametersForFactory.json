@@ -17,6 +17,9 @@
 		"LS_SQL_DB_Dynamic_password": {
 			"value": ""
 		},
+		"LS_Sql_DB_connectionString": {
+			"value": ""
+		},
 		"ADLS_LS_properties_typeProperties_url": {
 			"value": "https://missionadebathch8adls23.dfs.core.windows.net/"
 		},

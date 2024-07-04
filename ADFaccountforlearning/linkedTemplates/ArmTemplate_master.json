@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'LS_SQL_DB_Dynamic'"
 		},
+		"LS_Sql_DB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_Sql_DB'"
+		},
 		"ADLS_LS_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://missionadebathch8adls23.dfs.core.windows.net/"
@@ -109,6 +113,9 @@
 					},
 					"LS_SQL_DB_Dynamic_password": {
 						"value": "[parameters('LS_SQL_DB_Dynamic_password')]"
+					},
+					"LS_Sql_DB_connectionString": {
+						"value": "[parameters('LS_Sql_DB_connectionString')]"
 					},
 					"ADLS_LS_properties_typeProperties_url": {
 						"value": "[parameters('ADLS_LS_properties_typeProperties_url')]"
