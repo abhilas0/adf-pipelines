@@ -75,6 +75,10 @@
 			"type": "string",
 			"defaultValue": "@{linkedService().userName}"
 		},
+		"Trigger_Storage_1_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/7ae103b2-6c79-4a9d-8d5c-4e07d943529d/resourceGroups/azuredetrainingdeepak/providers/Microsoft.Storage/storageAccounts/missionadebathch8adls23"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -215,6 +219,29 @@
 			},
 			"dependsOn": [
 				"[resourceId('Microsoft.Resources/deployments', 'ADFaccountforlearning_ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "ADFaccountforlearning_ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"Trigger_Storage_1_properties_typeProperties_scope": {
+						"value": "[parameters('Trigger_Storage_1_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ADFaccountforlearning_ArmTemplate_3')]"
 			]
 		}
 	]

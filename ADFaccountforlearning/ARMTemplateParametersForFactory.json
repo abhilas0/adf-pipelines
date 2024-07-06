@@ -55,6 +55,9 @@
 		},
 		"LS_SQL_DB_Dynamic_properties_typeProperties_userName": {
 			"value": "@{linkedService().userName}"
+		},
+		"Trigger_Storage_1_properties_typeProperties_scope": {
+			"value": "/subscriptions/7ae103b2-6c79-4a9d-8d5c-4e07d943529d/resourceGroups/azuredetrainingdeepak/providers/Microsoft.Storage/storageAccounts/missionadebathch8adls23"
 		}
 	}
 }
