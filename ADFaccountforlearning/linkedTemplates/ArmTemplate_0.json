@@ -43,6 +43,10 @@
 			"type": "string",
 			"defaultValue": "Abhilash"
 		},
+		"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://azuretrainingbatch8.vault.azure.net/"
+		},
 		"LS_Rest_Api_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://restcountries.com/v3.1/all"
@@ -115,6 +119,19 @@
 						"type": "SecureString",
 						"value": "[parameters('AzureSqlDatabase1_password')]"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_AzureKeyVault')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('LS_AzureKeyVault_properties_typeProperties_baseUrl')]"
 				}
 			},
 			"dependsOn": []
@@ -226,6 +243,92 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ADLS_CSV_generic_dataset')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_LS",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"folderName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": {
+							"value": "@dataset().folderName",
+							"type": "Expression"
+						},
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLS_json_DS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "landing"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CSV_DS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_ADLS_CSV_generic')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -298,6 +401,34 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
+						"fileSystem": "landing"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Customer_Folder_CSV')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_LS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Customer",
 						"fileSystem": "landing"
 					},
 					"columnDelimiter": ",",
@@ -434,340 +565,6 @@
 					"quoteChar": "\""
 				},
 				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_High_WaterMark')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ADLS_LS",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "HighWaterMark.txt",
-						"fileSystem": "landing"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": false,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_JSON_Generic')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ADLS_LS",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folderName": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": {
-							"value": "@dataset().folderName",
-							"type": "Expression"
-						},
-						"fileSystem": "landing"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"CustomerID": {
-							"type": "integer"
-						},
-						"NameStyle": {
-							"type": "boolean"
-						},
-						"Title": {
-							"type": "string"
-						},
-						"FirstName": {
-							"type": "string"
-						},
-						"MiddleName": {
-							"type": "string"
-						},
-						"LastName": {
-							"type": "string"
-						},
-						"Suffix": {
-							"type": "string"
-						},
-						"CompanyName": {
-							"type": "string"
-						},
-						"SalesPerson": {
-							"type": "string"
-						},
-						"EmailAddress": {
-							"type": "string"
-						},
-						"Phone": {
-							"type": "string"
-						},
-						"PasswordHash": {
-							"type": "string"
-						},
-						"PasswordSalt": {
-							"type": "string"
-						},
-						"rowguid": {
-							"type": "string"
-						},
-						"ModifiedDate": {
-							"type": "string"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_JSON_customer')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ADLS_LS",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folderName": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": {
-							"value": "@dataset().folderName",
-							"type": "Expression"
-						},
-						"fileSystem": "landing"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"ProductID": {
-							"type": "integer"
-						},
-						"Name": {
-							"type": "string"
-						},
-						"ProductNumber": {
-							"type": "string"
-						},
-						"Color": {
-							"type": "string"
-						},
-						"StandardCost": {
-							"type": "number"
-						},
-						"ListPrice": {
-							"type": "number"
-						},
-						"Size": {
-							"type": "string"
-						},
-						"Weight": {
-							"type": "number"
-						},
-						"ProductCategoryID": {
-							"type": "integer"
-						},
-						"ProductModelID": {
-							"type": "integer"
-						},
-						"SellStartDate": {
-							"type": "string"
-						},
-						"SellEndDate": {
-							"type": "string"
-						},
-						"DiscontinuedDate": {
-							"type": "null"
-						},
-						"ThumbNailPhoto": {
-							"type": "string"
-						},
-						"ThumbnailPhotoFileName": {
-							"type": "string"
-						},
-						"rowguid": {
-							"type": "string"
-						},
-						"ModifiedDate": {
-							"type": "string"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_Product_CSV')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ADLS_LS",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"folderName": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": {
-							"value": "@dataset().folderName",
-							"type": "Expression"
-						},
-						"fileSystem": "landing"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_Product_CSV_File')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ADLS_LS",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "saleslt.Product.txt",
-						"folderPath": "Product",
-						"fileSystem": "landing"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "ProductID",
-						"type": "String"
-					},
-					{
-						"name": "Name",
-						"type": "String"
-					},
-					{
-						"name": "ProductNumber",
-						"type": "String"
-					},
-					{
-						"name": "Color",
-						"type": "String"
-					},
-					{
-						"name": "StandardCost",
-						"type": "String"
-					},
-					{
-						"name": "ListPrice",
-						"type": "String"
-					},
-					{
-						"name": "Size",
-						"type": "String"
-					},
-					{
-						"name": "Weight",
-						"type": "String"
-					},
-					{
-						"name": "ProductCategoryID",
-						"type": "String"
-					},
-					{
-						"name": "ProductModelID",
-						"type": "String"
-					},
-					{
-						"name": "SellStartDate",
-						"type": "String"
-					},
-					{
-						"name": "SellEndDate",
-						"type": "String"
-					},
-					{
-						"name": "DiscontinuedDate",
-						"type": "String"
-					},
-					{
-						"name": "ThumbNailPhoto",
-						"type": "String"
-					},
-					{
-						"name": "ThumbnailPhotoFileName",
-						"type": "String"
-					},
-					{
-						"name": "rowguid",
-						"type": "String"
-					},
-					{
-						"name": "ModifiedDate",
-						"type": "String"
-					}
-				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ADLS_LS')]"

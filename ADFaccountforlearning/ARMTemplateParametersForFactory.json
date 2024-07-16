@@ -32,6 +32,18 @@
 		"AzureSqlDatabase1_properties_typeProperties_userName": {
 			"value": "Abhilash"
 		},
+		"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://azuretrainingbatch8.vault.azure.net/"
+		},
+		"LS_AzureSqlDatabase_Using_keyVault_properties_typeProperties_server": {
+			"value": "databaseserveradf.database.windows.net"
+		},
+		"LS_AzureSqlDatabase_Using_keyVault_properties_typeProperties_database": {
+			"value": "azuresqldbfortesting"
+		},
+		"LS_AzureSqlDatabase_Using_keyVault_properties_typeProperties_userName": {
+			"value": "abhilash"
+		},
 		"LS_Rest_Api_properties_typeProperties_url": {
 			"value": "https://restcountries.com/v3.1/all"
 		},

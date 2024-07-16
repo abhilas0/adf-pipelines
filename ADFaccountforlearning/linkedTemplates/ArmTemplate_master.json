@@ -43,6 +43,22 @@
 			"type": "string",
 			"defaultValue": "Abhilash"
 		},
+		"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://azuretrainingbatch8.vault.azure.net/"
+		},
+		"LS_AzureSqlDatabase_Using_keyVault_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "databaseserveradf.database.windows.net"
+		},
+		"LS_AzureSqlDatabase_Using_keyVault_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "azuresqldbfortesting"
+		},
+		"LS_AzureSqlDatabase_Using_keyVault_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "abhilash"
+		},
 		"LS_Rest_Api_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://restcountries.com/v3.1/all"
@@ -133,6 +149,9 @@
 					"AzureSqlDatabase1_properties_typeProperties_userName": {
 						"value": "[parameters('AzureSqlDatabase1_properties_typeProperties_userName')]"
 					},
+					"LS_AzureKeyVault_properties_typeProperties_baseUrl": {
+						"value": "[parameters('LS_AzureKeyVault_properties_typeProperties_baseUrl')]"
+					},
 					"LS_Rest_Api_properties_typeProperties_url": {
 						"value": "[parameters('LS_Rest_Api_properties_typeProperties_url')]"
 					},
@@ -194,6 +213,15 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"LS_AzureSqlDatabase_Using_keyVault_properties_typeProperties_server": {
+						"value": "[parameters('LS_AzureSqlDatabase_Using_keyVault_properties_typeProperties_server')]"
+					},
+					"LS_AzureSqlDatabase_Using_keyVault_properties_typeProperties_database": {
+						"value": "[parameters('LS_AzureSqlDatabase_Using_keyVault_properties_typeProperties_database')]"
+					},
+					"LS_AzureSqlDatabase_Using_keyVault_properties_typeProperties_userName": {
+						"value": "[parameters('LS_AzureSqlDatabase_Using_keyVault_properties_typeProperties_userName')]"
 					}
 				}
 			},
@@ -234,6 +262,26 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ADFaccountforlearning_ArmTemplate_3')]"
+			]
+		},
+		{
+			"name": "ADFaccountforlearning_ArmTemplate_5",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"Trigger_Storage_1_properties_typeProperties_scope": {
 						"value": "[parameters('Trigger_Storage_1_properties_typeProperties_scope')]"
@@ -241,7 +289,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ADFaccountforlearning_ArmTemplate_3')]"
+				"[resourceId('Microsoft.Resources/deployments', 'ADFaccountforlearning_ArmTemplate_4')]"
 			]
 		}
 	]
